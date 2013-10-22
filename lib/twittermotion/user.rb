@@ -28,16 +28,35 @@ module Twitter
     # user.get_timeline(include_entities: 1) do |hash, ns_error|
     # end
     def get_timeline(options = {}, &block)
-      url = NSURL.URLWithString("http://api.twitter.com/1/statuses/home_timeline.json")
-      request = TWRequest.alloc.initWithURL(url, parameters:options, requestMethod:TWRequestMethodGET)
-      request.account = self.ac_account
-      request.performRequestWithHandler(lambda {|response_data, url_response, error|
+      get("http://api.twitter.com/1.1/statuses/home_timeline.json",
+          options) do |response_data, url_response, error|
         if !response_data
           block.call(nil, error)
         else
           block.call(BubbleWrap::JSON.parse(response_data), nil)
         end
-      })
+      end      
+    end
+
+    def get_friends(options = {}, &block)
+      get("http://api.twitter.com/1.1/friends/ids.json",
+          options) do |response_data, url_response, error|
+        if !response_data
+          block.call(nil, error)
+        else
+          block.call(BubbleWrap::JSON.parse(response_data), nil)
+        end
+      end      
+    end
+
+    private
+
+    def get(url, options = {}, &block)
+      request = TWRequest.alloc.initWithURL(NSURL.URLWithString(url),
+                                            parameters:options,
+                                            requestMethod:TWRequestMethodGET)
+      request.account = self.ac_account
+      request.performRequestWithHandler(block)
     end
   end
 end
