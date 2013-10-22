@@ -27,26 +27,19 @@ module Twitter
 
     # user.get_timeline(include_entities: 1) do |hash, ns_error|
     # end
-    def get_timeline(options = {}, &block)
-      get("http://api.twitter.com/1.1/statuses/home_timeline.json",
-          options) do |response_data, url_response, error|
-        if !response_data
-          block.call(nil, error)
-        else
-          block.call(BubbleWrap::JSON.parse(response_data), nil)
-        end
-      end      
-    end
 
-    def get_friends(options = {}, &block)
-      get("http://api.twitter.com/1.1/friends/ids.json",
-          options) do |response_data, url_response, error|
-        if !response_data
-          block.call(nil, error)
-        else
-          block.call(BubbleWrap::JSON.parse(response_data), nil)
+    [[:timeline, "http://api.twitter.com/1.1/statuses/home_timeline.json"],
+     [:friends, "http://api.twitter.com/1.1/friends/ids.json"],
+     [:followers, "http://api.twitter.com/1.1/followers/ids.json"]].each do |type, url|
+      define_method("get_#{type}") do |options = {}, &block|
+        get(url, options) do |response_data, url_response, error|
+          if !response_data
+            block.call(nil, error)
+          else
+            block.call(BubbleWrap::JSON.parse(response_data), nil)
+          end
         end
-      end      
+      end
     end
 
     private
