@@ -61,6 +61,14 @@ user.get_timeline do |hash, ns_error|
 end
 ```
 
+Grab a user's friends:
+
+```ruby
+user.get_friends do |hash, ns_error|
+  p "Friends #{hash}"
+end
+```
+
 ## Installation
 
 1. `gem install twittermotion`
