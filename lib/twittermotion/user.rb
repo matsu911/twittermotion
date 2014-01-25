@@ -33,7 +33,7 @@ module Twitter
      [:followers, "http://api.twitter.com/1.1/followers/ids.json"]].each do |type, url|
       define_method("get_#{type}") do |options = {}, &block|
         get(url, options) do |response_data, url_response, error|
-          if !response_data
+          if response_data.nil? or response_data.length == 0
             block.call(nil, error)
           else
             block.call(BubbleWrap::JSON.parse(response_data), nil)
