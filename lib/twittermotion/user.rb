@@ -28,9 +28,9 @@ module Twitter
     # user.get_timeline(include_entities: 1) do |hash, ns_error|
     # end
 
-    [[:timeline, "http://api.twitter.com/1.1/statuses/home_timeline.json"],
-     [:friends, "http://api.twitter.com/1.1/friends/ids.json"],
-     [:followers, "http://api.twitter.com/1.1/followers/ids.json"]].each do |type, url|
+    [[:timeline, "https://api.twitter.com/1.1/statuses/home_timeline.json"],
+     [:friends, "https://api.twitter.com/1.1/friends/ids.json"],
+     [:followers, "https://api.twitter.com/1.1/followers/ids.json"]].each do |type, url|
       define_method("get_#{type}") do |options = {}, &block|
         get(url, options) do |response_data, url_response, error|
           if response_data.nil? or response_data.length == 0
